@@ -122,4 +122,163 @@ summary(tchests.model)
 
 # Part 2. Where we start comprehending what we just did -------------------
 
+# Variables ---------------------------------------------------------------
 
+# Integer
+a <- 0L
+# Whole numbers	e. g. 1, 100, -9
+
+# Numeric
+b <- 0
+# Decimals	0.1, -0.09, 234.567
+
+# Character
+c <- "0" 
+# Text	“A”, “hello”, “welcome”
+
+# Logical
+d <- FALSE
+# Booleans TRUE or FALSE
+
+a
+b
+c
+d
+
+# Let's go back to pirates
+
+View(pirates)
+
+
+# Copying and modifying --------------------------------------------------
+
+# Create a variable
+e <- 1
+e
+
+# Copy a variable
+f <- e
+f
+
+# Modify a variable
+e
+e <- 2
+e
+f
+
+# Functions ---------------------------------------------------------------
+# R is a functional language. Programmers don't like it.
+# R is a functional language. Researchers like it!
+
+print("Hello world!")
+
+# Congratulations, you are a ~~wizard~~ programmer
+
+# R is a calculator!
+
+1 / 200 * 30
+(59 + 73 + 2) / 3
+
+# Functions take input(s) and return something
+
+add <- function(x, y){
+  x + y
+}
+
+add(76, 37)
+add(e, f)
+e + f
+
+# Maybe this function isn't very useful, but it's our function
+
+# A more useful function?
+
+spocti.odmenu <- function(odmena_ukon, plny_ukon, pul_ukon){
+  (plny_ukon * odmena_ukon) + 
+  (pul_ukon * odmena_ukon) * 0.5 +
+  (300 * (plny_ukon + pul_ukon))
+}
+
+spocti.odmenu(odmena_ukon = 1500, plny_ukon = 6, pul_ukon = 2)
+
+# Not extremely helpful, but you get the idea.
+# For the most part, however, you will be using already existing functions
+# Many functions however take VECTORS as an input
+
+
+# Switching types ---------------------------------------------------------
+
+# Let's try changing variable types
+as.numeric("0")
+as.character(0)
+as.numeric("ab")
+as.character(TRUE)
+as.logical("0")
+as.logical(0)
+as.integer(0.4)
+as.integer("0.4")
+
+# Some work, some don't. Sometimes we have to change things up.
+
+"1" + "1"
+as.numeric("1") + as.numeric("1")
+
+# Vectors -----------------------------------------------------------------
+
+# A vector is an ordered group of variables of the same kind
+# or 1D collection of variables of the same type
+# or a combination of several scalars stored as a single object.
+
+c(1, 4, 7)
+
+# We can assign vectors
+
+# Combine
+numbers <- c(1, 4, 7)
+numbers
+
+# Range
+numbers_2 <- 1:5
+numbers_2
+
+# Sequence
+numbers_3 <- seq(from = 0, to = 12, by = 4)
+numbers_3
+
+# Repetition
+numbers_4 <- rep(3, times = 10)
+numbers_4
+
+# Vectors of all kinds!
+
+course <- c("Introduction", "to", "data", "science")
+byte <- rep(FALSE, times = 8)
+
+
+# Vectors and Functions !? ------------------------------------------------
+# Let's get a vector of data
+heights <- pirates$height
+
+# Check it
+typeof(heights)
+
+# Manage your memory (you actually don't have to)
+heights <- as.integer(heights)
+typeof(heights)
+
+# Sum it all
+sum(heights)
+# The smallest
+min(heights)
+# The tallest
+max(heights)
+# The mean
+mean(heights)
+# The median
+median(heights)
+# Range in one function
+summary(heights)
+# Frequencies
+table(heights)
+
+# And that's it for today
