@@ -53,6 +53,7 @@ flights %>%
 
 # This is nice, however, so often we want to look for data, by filtering
 # And to filter, we have to understand BOOlean logic
+# Chapter 12 of R for Data Science covers this
 
 
 # Boolean Logic -----------------------------------------------------------
@@ -91,9 +92,237 @@ print(0.1 + 0.2, digits = 20)
 
 near(0.1 + 0.2, 0.3)
 
+# We can also compare numeric values
+
+5 > 4
+5 >= 5
+5 < 4
+6 <= 7
+
+# Finally we can check against a vector
+
+# A nice vector of colours
+colours <- colours()
+
+"gold" %in% colours
+
+"tomato" %in% colours
+
+"pebble" %in% colours
+
+# We could of course do it this way
+
+"pebble" == "gold" | "pebble" == "tomato" | "pebble" == "blue" # etc...
+
+# But we really don't want to
 
 
+# If, ifelse, case_when ---------------------------------------------------
+# We have an expression. If it evaluates to TRUE, we do the stuff in the curly brackets.
+
+if(143 > 100){print("The condition was TRUE")}
+
+x <- 10
+
+if(x >= 20){print("X is greater or equal than 2O")}
+if(x >= 10){print("X is greater or equal than 10")}
+
+# Else gives us an alternative, if none of the previous if statements was fulfilled.
+if(2 + 2 == 4){
+  print("1984 avoided")
+}else{
+    print("Literally 1984")}
+
+ifelse(2 + 2 == 4, print("1984 avoided"), print("Literally 1984"))
+# If else condenses a simple if|else into a single line.
+# This is generally quite useful.
+# Imagine a dataset where female sex is coded as 1
+
+ifelse(sex == 1, "female", "male")
+
+# Sometimes, however we have a lot of if options, that are exclusive.
+
+test_result <- 73
+grade <- ""
+
+if(test_result > 90){
+  grade <- "A"
+} else if(test_result > 80){
+  grade <- "B"
+} else if(test_result > 70){
+  grade <- "C"
+} else if(test_result > 60){
+  grade <- "D"
+} else if(test_result > 50){
+  grade <- "E"
+} else{
+  grade <- "F"
+}
+
+grade
+
+# This hurt to write
+
+grade <- case_when(
+  test_result > 90 ~ "A",
+  test_result > 80 ~ "B",
+  test_result > 70 ~ "C",
+  test_result > 60 ~ "D",
+  test_result > 50 ~ "E",
+  .default = "F"
+)
+
+grade
+
+# Still not entirely pleasant, but it is much more legible, and has less brackets
+# I recommend using ifelse() and case_when(), unless you are doing something way beyond the scope of this course
 
 
+# Missing values ----------------------------------------------------------
+
+# Sometimes, data is incomplete, or inapplicable
+
+starwars
+
+# R uses NA to mark missing values
+
+df <- tibble(x = c(TRUE, FALSE, NA))
+
+df %>% 
+  mutate(
+    and = x & NA,
+    or = x | NA
+  )
+
+# This might lead to (un)surprising behavior
+
+starwars$hair_color == "blond"
+
+# What if we want to find the NA values
+NA == NA
+# Even the IDE warns us, actually we want to use the is.na function
+is.na(NA)
+
+# Equipped with our newfound skills, we can move on filtering data
+
+
+# Filter() ----------------------------------------------------------------
+
+# filter keeps the rows that match a condition
+
+# Let's say we only care about characters from Tatooine
+
+starwars %>%
+  filter(homeworld == "Tatooine")
+
+# Now we want both Tatooine and Alderaan
+
+starwars %>%
+  filter(homeworld == "Tatooine" | homeworld == "Alderaan")
+
+# Now anything but Tatooine
+
+starwars %>%
+  filter(homeworld != "Tatooine")
+
+# And we can combine these
+
+starwars %>%
+  filter(homeworld == "Tatooine" & species == "Human" & gender == "masculine")
+
+# When choosing what to filter for, it might be useful to glean some more information about the data
+
+starwars %>%
+  count(skin_color, sort = TRUE) %>%
+  View()
+
+starwars %>%
+  count(sex, gender, sort = TRUE)
+
+# However this all depends of the RQs
+
+# Filter flights for all flights departing JFK NYC Airport operated by American Airlines afternoon (past 12:00).
+
+
+# Mutate() ------------------------------------------------------------------
+
+# Mutate changes columns and enables us to add new ones
+
+starwars %>%
+  mutate(bmi = mass/((height/100)^2)) %>%
+  relocate(bmi, .after = mass)
+
+# Let's calculate the BMI of the characters. BMI is used because its simple to calculate.
+# This script does not endorse blind use of BMI.
+
+starwars_bmi <- starwars %>%
+  mutate(bmi = mass/((height/100)^2)) %>%
+  relocate(bmi, .after = mass) %>%
+  mutate(weight_status = case_when(
+    bmi < 18.5 ~ "Underweight",
+    bmi < 25 ~ "Healthy weight",
+    bmi < 30 ~ "Overweight",
+    bmi >= 30 ~ "Obese",
+    .default = NA
+  )
+  ) %>%
+  relocate(weight_status, .after = bmi) %>%
+  filter(!is.na(bmi))
+
+View(starwars_bmi)
+
+starwars_bmi %>%
+  count(sex, gender, weight_status, sort = TRUE)
 
 write.csv(flights, "flights.csv")
+
+# Create a speed column for flights, which gives the average speed of the flight in km/h.
+
+
+# Write a case_when() statement that uses the month and day columns from flights 
+# to label a selection of important  holidays (e.g., New Years Day, 4th of July, Thanksgiving, and Christmas). 
+# First create a logical column that is either TRUE or FALSE, 
+# and then create a character column that either gives the name of the holiday or is NA.
+
+
+# Grouping and summarizing ------------------------------------------------
+
+# Let's create some grouped data
+by_species <- starwars %>% group_by(species)
+by_sex_gender <- starwars %>% group_by(sex, gender)
+
+by_sex_gender %>%
+  group_keys
+
+# So what does it do?
+
+starwars %>%
+  summarize(mean(height, na.rm = TRUE))
+
+by_sex_gender %>%
+  summarize(mean(height, na.rm = TRUE))
+
+# Summarize compresses the data set to a single line, which is something we like to see.
+# When we group the data, it compresses the data set to a single line PER group.
+# This allows for comparisons
+# However, beware the NA
+
+# Useful functions
+#   Center: mean(), median()
+#   Spread: sd(), IQR(), mad()
+#   Range: min(), max(),
+#   Position: first(), last(), nth(),
+#   Count: n(), n_distinct()
+#   Logical: any(), all()
+
+# Now we can play with grouping and summarizing
+
+# Find the number of flights from each airport
+# Find the mean flight distances per NYC airport in flights
+# Find the interquartile range of flight time per airline
+# Find the longest delays per airline
+
+
+
+
+
