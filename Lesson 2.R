@@ -274,7 +274,6 @@ View(starwars_bmi)
 starwars_bmi %>%
   count(sex, gender, weight_status, sort = TRUE)
 
-write.csv(flights, "flights.csv")
 
 # Create a speed column for flights, which gives the average speed of the flight in km/h.
 
@@ -322,6 +321,19 @@ by_sex_gender %>%
 # Find the interquartile range of flight time per airline
 # Find the longest delays per airline
 
+
+# Importing data ----------------------------------------------------------
+getwd()
+
+write.csv(flights, "flights.csv")
+flights_imported <- read.csv("flights.csv")
+
+# More options
+
+# read.csv2() - semicolon (;) separated values, useful for Czech data
+# read_excel() - read in Excel files, might need adjustments
+# read_rds() - read in RDS - R files
+# read_json() - read in JSON files
 
 
 
