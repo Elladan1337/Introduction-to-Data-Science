@@ -281,4 +281,38 @@ summary(heights)
 # Frequencies
 table(heights)
 
+
+# Types of research data --------------------------------------------------
+
+# 1. Continuous
+# In R we code them as numeric() i. e. as doubles or integers. 
+# 2. Ordinal
+# In R we code them as factors with levels
+
+# We simulate some data on the 5-point Likert scale
+answers <- c(rep("agree", 100), rep("strongly agree", 100),
+             rep("disagree", 100), rep("strongly disagree", 100),
+             rep("neutral", 100))
+
+# Take a sample
+answers_sample <- sample(answers, 25)
+
+# See what we've got
+table(answers_sample)
+
+# The scale is ordinal, however
+likert_scale <- c("strongly disagree", "disagree", "neutral", "agree", "strongly agree")
+
+# By using the factor function with the levels set to the likert_scale we fix this
+ordinal_answers <- factor(answers_sample, levels = likert_scale)
+table(ordinal_answers)
+
+# This will save you a lot of pain when visualizing and modeling
+# 3. Categorical
+# Simply categories, should be coded as strings
+# 4. Missing
+# 5. Censored
+# We will discuss the difference next time
+
+
 # And that's it for today
