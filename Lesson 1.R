@@ -223,6 +223,9 @@ as.integer("0.4")
 "1" + "1"
 as.numeric("1") + as.numeric("1")
 
+# Now write a function that calculates BMI from height and weight,
+# which will not break if I give it a string number like "20".
+
 # Vectors -----------------------------------------------------------------
 
 # A vector is an ordered group of variables of the same kind
